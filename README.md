@@ -3,7 +3,10 @@ tk4100-rfid-reader
 
 Read cards from a USB TK4100 / EM4100 card reader
 
-Only tested on Raspberry PI but should work on any Linux OS
+Only tested on Raspberry PI but should work on any Linux OS.  I personally used
+this reader from Amazon.
+
+- [SainSmart RFID Mifare IC Card Reader USB for TK4100/ EM4100/ EM4200 (13.56M 1443A (2H+4H))](https://www.amazon.com/gp/product/B01LZK7HFK/)
 
 Usage
 -----
