@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+/**
+ * Read RFID tags and exec a script when read
+ *
+ * Author: Dave Eddy <dave@daveeddy.com>
+ * Date: May 11, 2018
+ * License: MIT
+ */
+
+var cp = require('child_process');
+var fs = require('fs');
+
+var assert = require('assert-plus');
+var bunyan = require('bunyan');
+var clone = require('clone');
+var vasync = require('vasync');
+
+var RFIDReader = require('./lib/rfid-reader');
+
+var config = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+
+assert.object(config, 'config must be an object');
+assert.object(config.log, 'config.log must be an object');
+assert.object(config.exec, 'config.exec must be an object');
+assert.string(config.exec.file, 'config.exec.file must be a string');
+assert.optionalObject(config.exec.options, 'config.exec.options must be an object');
+
+var log = bunyan.createLogger(config.log);
+
+var execQueue = vasync.queue(function (tag, cb) {
+    assert.string(tag, 'tag');
+    assert.func(cb, 'cb');
+
+    var opts = {
+        env: clone(process.env),
+        encoding: 'utf8'
+    };
+
+    if (config.exec.options) {
+        Object.keys(config.exec.options).forEach(function (option) {
+            opts[option] = config.exec.options[option];
+        });
+    }
+
+    assert.object(opts.env, 'opts.env');
+
+    opts.env.RFID_TAG_ID = tag;
+
+    log.debug({opts: opts}, 'executing "%s"', config.exec.file);
+    cp.execFile(config.exec.file, [], opts, function (err, stdout, stderr) {
+        var all = {
+            stdout: stdout,
+            stderr: stderr
+        };
+
+        if (err) {
+            all.err = err;
+            log.error(all, 'exeuction failed');
+            cb();
+            return;
+        }
+
+        log.debug(all, 'execution succeeded');
+        cb();
+    });
+}, 1);
+
+var rr = new RFIDReader({
+    device: config.device
+});
+
+rr.on('tag', function (tag) {
+    log.debug('read tag "%s"', tag);
+    execQueue.push(tag);
+});
+
+rr.on('error', function (err) {
+    log.error(err, 'read tag error: %s', err.message);
+});
+
+log.info('watching for events on %s', config.device);

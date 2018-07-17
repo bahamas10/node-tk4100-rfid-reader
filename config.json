@@ -1,0 +1,15 @@
+{
+    "device": "/dev/input/event0",
+    "exec": {
+        "file": "./new-tag",
+        "options": {
+            "timeout": 30000,
+            "uid": 1000,
+            "gid": 1000
+        }
+    },
+    "log": {
+        "level": "debug",
+        "name": "rfid-reader"
+    }
+}

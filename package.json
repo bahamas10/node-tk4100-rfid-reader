@@ -1,0 +1,36 @@
+{
+  "name": "tk4100-rfid-reader",
+  "description": "Read cards from a USB TK4100 / EM4100 card reader",
+  "version": "0.0.0",
+  "author": "Dave Eddy <dave@daveeddy.com> (http://www.daveeddy.com)",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bahamas10/node-tk4100-rfid-reader.git"
+  },
+  "main": "./lib/rfid-reader.js",
+  "bin": {
+    "tk4100-rfid-reader": "./tk4100-rfid-reader"
+  },
+  "dependencies": {
+    "assert-plus": "^1.0.0",
+    "bunyan": "^1.8.12",
+    "clone": "^2.1.1",
+    "input-event": "^1.2.4",
+    "vasync": "^2.2.0"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [
+    "raspberry-pi",
+    "rpi",
+    "pi",
+    "rfid",
+    "em4100",
+    "tk4100",
+    "card"
+  ]
+}

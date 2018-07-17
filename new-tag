@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Called when a new tag is read
+#
+# $RFID_TAG_ID will be set to the tag read
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Date: July 16, 2018
+# License: MIT
+
+tag=$RFID_TAG_ID
+hex_re='^[0-9a-fA-F]+$'
+
+# Sanity check
+[[ -n $tag ]] || exit 1
+[[ $tag =~ $hex_re ]] || exit 1
+
+# Do some work with the tag information received
+echo "running command as $(whoami) for tag $tag"
